@@ -1,6 +1,5 @@
 # NimOps Company Portal
 
-Origin web app for the Cloudflare Associate Solutions Engineer take-home assessment.
 
 ## Routes
 
