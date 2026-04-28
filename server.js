@@ -5,9 +5,50 @@ const port = process.env.PORT || 3000;
 const sessionCookie = "nimops_demo_session";
 const demoEmail = (process.env.DEMO_EMAIL || "gideon@nimops.example").trim().toLowerCase();
 const demoPassword = process.env.DEMO_PASSWORD || "NimOps-demo-2026!";
+const canonicalHosts = (process.env.CANONICAL_HOSTS || process.env.CANONICAL_HOST || "")
+  .split(",")
+  .map((host) => host.trim().toLowerCase())
+  .filter(Boolean);
+const localHosts = new Set(["localhost", "127.0.0.1", "::1"]);
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+app.use((req, res, next) => {
+  if (canonicalHosts.length === 0 || req.path === "/health") {
+    next();
+    return;
+  }
+
+  const requestHost = req.hostname.toLowerCase();
+  if (canonicalHosts.includes(requestHost) || localHosts.has(requestHost)) {
+    next();
+    return;
+  }
+
+  res.status(403).send(`<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cloudflare Required | NimOps Staff Portal</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">403</p>
+      <section class="narrow">
+        <h1>Access through the Cloudflare-protected hostname.</h1>
+        <p class="lede">Direct origin requests are blocked for this demo so traffic passes through Cloudflare security controls.</p>
+        <div class="actions">
+          <a class="button primary" href="https://${canonicalHosts[0]}">Open NimOps portal</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>`);
+});
+
 app.use(express.static("public"));
 
 const parseCookies = (cookieHeader = "") =>

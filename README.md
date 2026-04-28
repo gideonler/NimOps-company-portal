@@ -36,6 +36,25 @@ DEMO_EMAIL="your-email@example.com"
 DEMO_PASSWORD="choose-a-demo-password"
 ```
 
+## Origin Bypass Protection
+
+Set a canonical hostname in Render to reject direct origin traffic that does not use the Cloudflare-protected hostname:
+
+```bash
+CANONICAL_HOSTS="portal.gideonler.com"
+```
+
+When this variable is set, normal app routes only respond for the configured host. The Render health check route `/health` remains available so Render can keep monitoring the service.
+
+Demo:
+
+```text
+https://portal.gideonler.com/                  # allowed through Cloudflare
+https://nimops-company-portal.onrender.com/    # blocked by the app
+```
+
+This app-level check is useful for the take-home demo, but production origin bypass protection should prefer Cloudflare Tunnel, origin allowlisting to Cloudflare IP ranges, Authenticated Origin Pulls, or disabling the platform default domain when the host supports it.
+
 ## Local Development
 
 ```bash
