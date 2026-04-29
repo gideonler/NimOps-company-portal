@@ -1,86 +1,79 @@
 # NimOps Company Portal
 
+NimOps Company Portal is a fictional internal staff portal for a distributed company. The demo shows how Cloudflare can sit in front of the application to secure traffic, block common attacks, control access to sensitive pages, and serve personalized content at the edge.
 
-## Routes
 
-| Route | Purpose |
+
+
+
+## Repository Structure
+
+```text
+NimOps-company-portal/
+├── README.md
+├── package.json
+├── package-lock.json
+├── render.yaml
+├── server.js
+├── public/
+│   └── styles.css
+└── workers/
+    └── nimops-edge/
+        ├── wrangler.jsonc
+        ├── src/
+        │   └── index.js
+        ├── assets/
+        │   └── flags/
+        │       ├── SG.svg
+        │       └── US.svg
+        └── sql/
+            ├── schema.sql
+            └── seed.sql
+```
+
+What each part does:
+
+| Path | Purpose |
 | --- | --- |
-| `/` | Demo employee sign-in screen |
-| `/login` | Local demo session creation route |
-| `/logout` | Clears the local demo session |
-| `/dashboard` | Employee dashboard intended to be protected by Cloudflare Access |
-| `/announcements` | Protected internal company updates |
-| `/directory` | Protected mock people directory |
-| `/requests` | Protected IT request center |
-| `/docs` | Protected employee knowledge base |
-| `/api/login-attempt` | POST endpoint intended for Cloudflare rate limiting demonstration |
-| `/health` | Health check for Render |
+| `server.js` | Express origin app hosted on Render. It serves the staff portal, local demo login, protected internal pages, `/api/login-attempt`, `/health`, and app-level origin bypass protection. |
+| `public/styles.css` | Styling for the Render-hosted portal UI. |
+| `render.yaml` | Render deployment configuration, including build/start commands, health check path, and the `CANONICAL_HOSTS` environment variable. |
+| `package.json` | Node app metadata, scripts, and Express dependency for the origin app. |
+| `workers/nimops-edge/src/index.js` | Cloudflare Worker code for `/secure`, `/flags/:country`, and `/flags-d1/:country`. |
+| `workers/nimops-edge/wrangler.jsonc` | Wrangler configuration for Worker routes plus R2 and D1 bindings. |
+| `workers/nimops-edge/assets/flags/` | Local source copies of flag assets uploaded to R2 and encoded into D1. |
+| `workers/nimops-edge/sql/schema.sql` | D1 table definition for storing flag assets. |
+| `workers/nimops-edge/sql/seed.sql` | D1 seed data for the Singapore flag. |
 
-Worker-owned routes such as `/secure`, `/flags/:country`, and `/flags-d1/:country` are intentionally not implemented here. Those should be added later through Cloudflare Workers, R2, and D1.
-
-The local sign-in flow exists only to make the origin app feel realistic before Cloudflare is layered in. In the final demo, Cloudflare Access should protect `/dashboard` before requests reach Render.
-
-## Demo Credentials
-
-By default, local sign-in accepts:
+The repo intentionally separates the **origin app** from the **edge Worker**:
 
 ```text
-Email: gideon@nimops.example
-Password: NimOps-demo-2026!
+Render origin app: /, /dashboard, /directory, /requests, /docs, /api/login-attempt
+Cloudflare Worker: /secure, /flags/:country, /flags-d1/:country
 ```
 
-You can override these in Render or your shell:
 
-```bash
-DEMO_EMAIL="your-email@example.com"
-DEMO_PASSWORD="choose-a-demo-password"
-```
 
-## Origin Bypass Protection
-
-Set a canonical hostname in Render to reject direct origin traffic that does not use the Cloudflare-protected hostname:
-
-```bash
-CANONICAL_HOSTS="portal.gideonler.com"
-```
-
-When this variable is set, normal app routes only respond for the configured host. The Render health check route `/health` remains available so Render can keep monitoring the service.
-
-Demo:
-
-```text
-https://portal.gideonler.com/                  # allowed through Cloudflare
-https://nimops-company-portal.onrender.com/    # blocked by the app
-```
-
-This app-level check is useful for the take-home demo, but production origin bypass protection should prefer Cloudflare Tunnel, origin allowlisting to Cloudflare IP ranges, Authenticated Origin Pulls, or disabling the platform default domain when the host supports it.
 
 ## Local Development
 
+Install dependencies:
+
 ```bash
 npm install
-npm run dev
 ```
 
-Open `http://localhost:3000`.
+Run the origin app:
 
-## Render Deployment
+```bash
+npm start
+```
 
-1. Push this project to a GitHub repository.
-2. In Render, create a new Web Service from the repository.
-3. Use these settings:
-   - Runtime: Node
-   - Build command: `npm install`
-   - Start command: `npm start`
-   - Health check path: `/health`
-4. Deploy the service.
-5. Add your Cloudflare-managed hostname as a custom domain in Render.
-6. In Cloudflare DNS, create a proxied CNAME from your hostname to the Render target.
+Open:
 
-## Cloudflare Demo Mapping
+```text
+http://localhost:3000
+```
 
-- Cloudflare WAF Managed Rules: protect `/login` from SQL injection-style requests submitted through the main sign-in form.
-- Cloudflare Rate Limiting: protect `POST /api/login-attempt` from repeated abuse.
-- Cloudflare Access: protect `/dashboard` and the later Worker route `/secure`.
-- Cloudflare Worker: later serves `/secure`, `/flags/:country`, and `/flags-d1/:country`.
-- R2 and D1: later store and retrieve country flag assets.
+
+

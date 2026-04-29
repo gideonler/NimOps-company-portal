@@ -3,4 +3,6 @@ node_modules/
 .DS_Store
 npm-debug.log*
 .codex
+workers/**/.wrangler/
 AGENTS.md
+zerotrust.md

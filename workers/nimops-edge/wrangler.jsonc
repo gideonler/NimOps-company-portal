@@ -21,11 +21,6 @@
 		{
 			"binding": "FLAGS_BUCKET",
 			"bucket_name": "nimops-flags"
-		},
-		{
-			"bucket_name": "nimops-flags",
-			"binding": "nimops_flags",
-			"remote": true
 		}
 	],
 	"d1_databases": [
@@ -33,12 +28,6 @@
 			"binding": "FLAGS_DB",
 			"database_name": "nimops-flags-db",
 			"database_id": "cef4c3f9-4a41-465c-8cb1-0038712e9876"
-		},
-		{
-			"binding": "nimops_flags_db",
-			"database_name": "nimops-flags-db",
-			"database_id": "cef4c3f9-4a41-465c-8cb1-0038712e9876",
-			"remote": true
 		}
 	]
 }
