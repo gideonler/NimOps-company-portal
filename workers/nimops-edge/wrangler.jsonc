@@ -1,0 +1,44 @@
+{
+	"name": "nimops-edge",
+	"main": "src/index.js",
+	"compatibility_date": "2026-04-29",
+	"workers_dev": true,
+	"routes": [
+		{
+			"pattern": "tunnel.gideonler.com/secure",
+			"zone_name": "gideonler.com"
+		},
+		{
+			"pattern": "tunnel.gideonler.com/flags/*",
+			"zone_name": "gideonler.com"
+		},
+		{
+			"pattern": "tunnel.gideonler.com/flags-d1/*",
+			"zone_name": "gideonler.com"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "FLAGS_BUCKET",
+			"bucket_name": "nimops-flags"
+		},
+		{
+			"bucket_name": "nimops-flags",
+			"binding": "nimops_flags",
+			"remote": true
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "FLAGS_DB",
+			"database_name": "nimops-flags-db",
+			"database_id": "cef4c3f9-4a41-465c-8cb1-0038712e9876"
+		},
+		{
+			"binding": "nimops_flags_db",
+			"database_name": "nimops-flags-db",
+			"database_id": "cef4c3f9-4a41-465c-8cb1-0038712e9876",
+			"remote": true
+		}
+	]
+}

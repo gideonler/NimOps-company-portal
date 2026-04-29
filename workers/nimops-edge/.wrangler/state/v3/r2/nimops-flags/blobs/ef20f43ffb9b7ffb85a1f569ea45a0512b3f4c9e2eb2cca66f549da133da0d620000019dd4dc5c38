@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" role="img" aria-labelledby="title">
+  <title>Singapore flag</title>
+  <rect width="900" height="600" fill="#fff"/>
+  <rect width="900" height="300" fill="#ef3340"/>
+  <circle cx="170" cy="150" r="86" fill="#fff"/>
+  <circle cx="200" cy="150" r="70" fill="#ef3340"/>
+  <g fill="#fff" transform="translate(268 150)">
+    <polygon points="0,-54 12,-17 51,-17 20,5 31,43 0,20 -31,43 -20,5 -51,-17 -12,-17"/>
+    <polygon points="-57,-18 -45,19 -6,19 -37,42 -26,79 -57,56 -88,79 -77,42 -108,19 -69,19" transform="scale(.42)"/>
+    <polygon points="57,-18 69,19 108,19 77,42 88,79 57,56 26,79 37,42 6,19 45,19" transform="scale(.42)"/>
+    <polygon points="-35,58 -23,95 16,95 -15,118 -4,155 -35,132 -66,155 -55,118 -86,95 -47,95" transform="scale(.42)"/>
+    <polygon points="35,58 47,95 86,95 55,118 66,155 35,132 4,155 15,118 -16,95 23,95" transform="scale(.42)"/>
+  </g>
+</svg>

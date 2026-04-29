@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS flags;
+
+CREATE TABLE flags (
+  country_code TEXT PRIMARY KEY,
+  content_type TEXT NOT NULL,
+  body_base64 TEXT NOT NULL,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
